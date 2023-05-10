@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const PropertyCard = ({
   rooms,
@@ -18,11 +19,26 @@ const PropertyCard = ({
   property,
   availableRooms,
 }) => {
+  const navigation = useNavigation();
   const { width, height } = Dimensions.get("window");
 
   return (
     <View>
       <Pressable
+        onPress={() =>
+          navigation.navigate("Info", {
+            name: property.name,
+            rating: property.rating,
+            oldPrice: property.oldPrice,
+            newPrice: property.newPrice,
+            photos: property.photos,
+            availableRooms: property.rooms,
+            adults: adults,
+            children: children,
+            rooms: rooms,
+            selectDates: selectDates,
+          })
+        }
         style={{ margin: 15, flexDirection: "row", backgroundColor: "white" }}
       >
         <View>

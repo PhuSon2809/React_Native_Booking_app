@@ -1,9 +1,7 @@
-import { FontAwesome5, Ionicons, Octicons } from "@expo/vector-icons";
+import { Entypo, FontAwesome, FontAwesome5, Ionicons, Octicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useLayoutEffect, useState } from "react";
-import { ScrollView } from "react-native";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import PropertyCard from "../components/PropertyCard";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import {
   BottomModal,
   ModalContent,
@@ -11,8 +9,7 @@ import {
   ModalTitle,
   SlideAnimation,
 } from "react-native-modals";
-import { Entypo } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
+import PropertyCard from "../components/PropertyCard";
 
 const PlacesScreen = () => {
   const route = useRoute();

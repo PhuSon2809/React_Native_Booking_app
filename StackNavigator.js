@@ -5,12 +5,18 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import { StyleSheet } from "react-native";
 import BookingScreen from "./screens/BookingScreen";
+import ConfirmationScreen from "./screens/ConfirmationScreen";
 import HomeScreen from "./screens/HomeScreen";
+import LoginScreen from "./screens/LoginScreen";
 import MapScreen from "./screens/MapScreen";
 import PlacesScreen from "./screens/PlacesScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import PropertyInfoScreen from "./screens/PropertyInfoScreen";
+import RegisterScreen from "./screens/RegisterScreen";
+import RoomsScreen from "./screens/RoomsScreen";
 import SavedScreen from "./screens/SavedScreen";
 import SearchScreen from "./screens/SearchScreen";
+import UserScreen from "./screens/UserScreen";
 
 const StackNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -87,6 +93,16 @@ const StackNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="Main"
           component={BottomTabs}
           options={{ headerShown: false }}
@@ -102,6 +118,10 @@ const StackNavigator = () => {
           component={MapScreen}
           options={{ headerShown: false }}
         />
+        <Stack.Screen name="Info" component={PropertyInfoScreen} />
+        <Stack.Screen name="Rooms" component={RoomsScreen} />
+        <Stack.Screen name="User" component={UserScreen} />
+        <Stack.Screen name="Confirmation" component={ConfirmationScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
