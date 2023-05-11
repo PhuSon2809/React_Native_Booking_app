@@ -9,12 +9,57 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+    // console.log(userCredentials.user.stsTokenManager.accessToken);
+    // AsyncStorage.setItem(
+    //   "tokenUser",
+    //   userCredentials.user.stsTokenManager.accessToken
+    // );
+
+    // useEffect(() => {
+    //   const getMyObject = async () => {
+    //     try {
+    //       const jsonValue = await AsyncStorage.getItem("tokenUser");
+    //       console.log("jsonValue");
+    //       if (jsonValue) {
+    //         navigation.replace("Main");
+    //       }
+    //     } catch (e) {
+    //       console.log(e);
+    //     }
+    //   };
+    //   getMyObject();
+    // }, [token]);
+
+  const login = () => {
+    signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+      console.log("user credential", userCredential);
+      const user = userCredential.user;
+      console.log("user details", user);
+    });
+  };
+
+  useEffect(() => {
+    try {
+      const unsubscribe = auth.onAuthStateChanged((authUser) => {
+        if (authUser) {
+          navigation.navigate("Main");
+        }
+      });
+
+      return unsubscribe;
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   return (
     <SafeAreaView
@@ -86,7 +131,7 @@ const LoginScreen = () => {
         </View>
 
         <Pressable
-          //   onPress={login}
+          onPress={login}
           style={{
             width: 200,
             backgroundColor: "#003580",

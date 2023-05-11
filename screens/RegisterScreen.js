@@ -11,7 +11,8 @@ import {
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
@@ -36,10 +37,18 @@ const RegisterScreen = () => {
         { cancelable: false }
       );
     }
-    
-    createUserWithEmailAndPassword(auth, email,password).then((userCredentials) => {
+
+    createUserWithEmailAndPassword(auth, email, password).then(
+      (userCredentials) => {
         const user = userCredentials._tokenResponse.email;
-    })
+        const uid = auth.currentUser.uid;
+
+        setDoc(doc(db, "users", `${uid}`), {
+          email: user,
+          phone: phone,
+        });
+      }
+    );
   };
 
   return (

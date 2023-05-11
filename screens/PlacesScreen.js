@@ -1,6 +1,12 @@
-import { Entypo, FontAwesome, FontAwesome5, Ionicons, Octicons } from "@expo/vector-icons";
+import {
+  Entypo,
+  FontAwesome,
+  FontAwesome5,
+  Ionicons,
+  Octicons,
+} from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import {
   BottomModal,
@@ -10,6 +16,8 @@ import {
   SlideAnimation,
 } from "react-native-modals";
 import PropertyCard from "../components/PropertyCard";
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 const PlacesScreen = () => {
   const route = useRoute();
@@ -516,7 +524,29 @@ const PlacesScreen = () => {
     (item) => item.place === route.params.place
   );
 
-  const [sortData, setSortData] = useState(data);
+  const [items, setItems] = useState([]);
+  const [sortData, setSortData] = useState(items);
+  const [loading, setLoading] = useState(false);
+
+  console.log("items", items);
+
+  useEffect(() => {
+    if (items.length > 0) return;
+
+    setLoading(true);
+
+    const fetchProducts = async () => {
+      const colRef = collection(db, "places");
+
+      const docsSnap = await getDocs(colRef);
+      docsSnap.forEach((doc) => {
+        items.push(doc.data());
+      });
+      setLoading(false);
+    };
+
+    fetchProducts();
+  }, [items]);
 
   const compare = (a, b) => {
     if (a.newPrice > b.newPrice) {
@@ -594,23 +624,27 @@ const PlacesScreen = () => {
         </Pressable>
       </Pressable>
 
-      <ScrollView style={{ backgroundColor: "#F5F5F5" }}>
-        {sortData
-          ?.filter((item) => item.place === route.params.place)
-          .map((item) =>
-            item.properties.map((property, index) => (
-              <PropertyCard
-                key={index}
-                rooms={route.params.rooms}
-                adults={route.params.adults}
-                children={route.params.children}
-                selectDates={route.params.selectDates}
-                property={property}
-                availableRooms={property.rooms}
-              />
-            ))
-          )}
-      </ScrollView>
+      {loading ? (
+        <Text>Fetching places....</Text>
+      ) : (
+        <ScrollView style={{ backgroundColor: "#F5F5F5" }}>
+          {sortData
+            ?.filter((item) => item.place === route.params.place)
+            .map((item) =>
+              item.properties.map((property, index) => (
+                <PropertyCard
+                  key={index}
+                  rooms={route.params.rooms}
+                  adults={route.params.adults}
+                  children={route.params.children}
+                  selectDates={route.params.selectDates}
+                  property={property}
+                  availableRooms={property.rooms}
+                />
+              ))
+            )}
+        </ScrollView>
+      )}
 
       {/* Modal sort and filter */}
       <BottomModal
